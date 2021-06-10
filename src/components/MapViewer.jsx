@@ -102,7 +102,7 @@ class MapViewer extends React.Component {
       geoServerUrl,
       loadingLayer,
       layerError,
-      WMSLayers,
+      WMSLayer,
     } = this.props;
     const { openErrorModal } = this.state;
     return (
@@ -158,26 +158,10 @@ class MapViewer extends React.Component {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
         />
-        {/* TODO: Catch warning from OpenStreetMap when cannot load the tiles */}
-        {/** TODO: Mostrar bajo este formato raster this.CapaBiomasSogamoso de cada estrategia de
-          Compensaciones */}
-        {/* <WMSTileLayer
-          srs="EPSG:4326"
-          layers="Biotablero:strategy_sogamoso_111_1_c"
-          url="http://indicadores.humboldt.org.co/geoserver/Biotablero/wms?service=WMS&styles=raster_strategy"
-          opacity={1}
-          alt="Regiones"
-          styles="raster_strategy"
-          format="image/png"
-          transparent
-        /> */}
-        {/** TODO: La carga del WMSTileLayer depende del usuario activo,
-            se debe ajustar esta carga cuando se implementen los usuarios */}
-        {WMSLayers && (
+        {WMSLayer && (
           <WMSTileLayer
-            srs="EPSG:3857"
-            layers={decodeURI(WMSLayers.layer)}
-            styles={decodeURI(WMSLayers.style)}
+            layers={WMSLayer.layer}
+            styles={WMSLayer.style}
             format="image/png"
             url={`${geoServerUrl}/Biotablero/wms?service=WMS`}
             opacity={0.4}
@@ -192,18 +176,15 @@ class MapViewer extends React.Component {
 MapViewer.propTypes = {
   geoServerUrl: PropTypes.string.isRequired,
   loadingLayer: PropTypes.bool,
-  // They're used in getDerivedStateFromProps but eslint won't realize
-  // eslint-disable-next-line react/no-unused-prop-types
   layers: PropTypes.object.isRequired,
-  // eslint-disable-next-line react/no-unused-prop-types
   layerError: PropTypes.bool,
-  WMSLayers: PropTypes.object,
+  WMSLayer: PropTypes.object,
 };
 
 MapViewer.defaultProps = {
   loadingLayer: false,
   layerError: false,
-  WMSLayers: null,
+  WMSLayer: null,
 };
 
 export default MapViewer;
