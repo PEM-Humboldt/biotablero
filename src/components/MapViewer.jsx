@@ -173,9 +173,8 @@ class MapViewer extends React.Component {
         /> */}
         {/** TODO: La carga del WMSTileLayer depende del usuario activo,
             se debe ajustar esta carga cuando se implementen los usuarios */}
-        {WMSLayers && (
+        {WMSLayers.layer && (
           <WMSTileLayer
-            srs="EPSG:3857"
             layers={decodeURI(WMSLayers.layer)}
             styles={decodeURI(WMSLayers.style)}
             format="image/png"
