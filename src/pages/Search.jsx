@@ -54,7 +54,7 @@ class Search extends Component {
       selectedAreaType: null,
       selectedArea: null,
       requestSource: null,
-      WMSLayers: { /* layer: 'Biotablero:rich_All_int_raster', style: 'continuo' */ },
+      WMSLayer: {},
     };
   }
 
@@ -472,13 +472,13 @@ class Search extends Component {
   };
 
   /**
-   * Switch layer based on graph showed
+   * Switch WMS layer based on selected accordion
    *
-   * @param {String} layerType layer type
+   * @param {Object} layerName layer object
    */
-   switchWMSLayer = (layerName, style) => {
+   switchWMSLayer = (layer) => () => {
     this.setState({
-      WMSLayers: { layer: layerName, style },
+      WMSLayer: layer || {},
     });
    }
 
@@ -508,6 +508,7 @@ class Search extends Component {
     let request = null;
     let shutOtherLayers = true;
     let layerStyle = this.featureStyle({ type: layerType });
+    let handlerWMSLayer = this.switchWMSLayer({});
     let fitBounds = true;
     let newActiveLayer = null;
     let layerKey = layerType;
@@ -568,8 +569,10 @@ class Search extends Component {
           id: 'geofence',
         };
         break;
-      case 'numberOfSpecies':
-        this.switchWMSLayer('Biotablero:rich_All_int_raster', 'continuo');
+      case 'richnessTotalNos':
+        handlerWMSLayer = this.switchWMSLayer(
+          { layer: 'Biotablero:rich_All_int_raster', style: 'continuo' },
+        );
         request = () => RestAPI.requestGeofenceGeometryByArea(
           selectedAreaTypeId,
           selectedAreaId,
@@ -577,7 +580,7 @@ class Search extends Component {
         layerStyle = this.featureStyle({ type: 'border', color: 'black', weight: 2 });
         newActiveLayer = {
           id: layerType,
-          name: 'Riqueza - Número de especies',
+          name: 'Riqueza - Número total de especies',
         };
         break;
       case 'forestIntegrity':
@@ -764,6 +767,7 @@ class Search extends Component {
       this.shutOffLayer();
       this.setState({ loadingLayer: false });
     }
+    handlerWMSLayer();
   }
 
   /**
@@ -899,7 +903,7 @@ class Search extends Component {
       'paramoPAConn',
       'dryForestPAConn',
       'wetlandPAConn',
-      'numberOfSpecies',
+      'richnessTotalNos',
     ];
     this.setState((prevState) => {
       const newState = { ...prevState };
@@ -915,6 +919,7 @@ class Search extends Component {
       newState.activeLayer = {};
       newState.loadingLayer = false;
       newState.layerError = false;
+      newState.WMSLayer = {};
       return newState;
     }, () => {
       const { history, setHeaderNames } = this.props;
@@ -940,7 +945,7 @@ class Search extends Component {
       layerError,
       geofencesArray,
       activeLayer: { name: activeLayer },
-      WMSLayers,
+      WMSLayer,
     } = this.state;
 
     const {
@@ -986,7 +991,7 @@ class Search extends Component {
               geoServerUrl={GeoServerAPI.getRequestURL()}
               loadingLayer={loadingLayer}
               layerError={layerError}
-              WMSLayers={WMSLayers}
+              WMSLayer={WMSLayer}
             />
             {activeLayer && (
               <div className="mapsTitle">
