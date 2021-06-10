@@ -175,9 +175,9 @@ class MapViewer extends React.Component {
             se debe ajustar esta carga cuando se implementen los usuarios */}
         {WMSLayers && (
           <WMSTileLayer
-            srs="EPSG:4326"
-            layers={WMSLayers.layer}
-            styles={WMSLayers.style}
+            srs="EPSG:3857"
+            layers={decodeURI(WMSLayers.layer)}
+            styles={decodeURI(WMSLayers.style)}
             format="image/png"
             url={`${geoServerUrl}/Biotablero/wms?service=WMS`}
             opacity={0.4}
