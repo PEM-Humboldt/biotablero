@@ -13,7 +13,7 @@ const Richness = (props) => {
   const componentsArray = [
     {
       label: {
-        id: 'numberOfSpecies',
+        id: 'richnessTotalNos',
         name: 'Número de especies',
       },
       component: NumberOfSpecies,
